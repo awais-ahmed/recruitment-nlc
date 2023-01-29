@@ -41,6 +41,17 @@ class EmployeeController {
     const tasks = await employee.$get('tasks')
     response.json({ data: tasks })
   }
+
+  public async allEmpAndTasks(request: Request, response: Response) {
+    const employees = await EmployeeService.all()
+    const employeesTasks = await Promise.all(
+      employees.map(async (employee) => {
+        const tasks = await employee.$get('tasks')
+        return { employee, tasks }
+      })
+    )
+    response.json({ data: employeesTasks })
+  }
 }
 
 export default new EmployeeController()
