@@ -6,16 +6,37 @@ import NotFound from '@app/Exceptions/NotFound'
 abstract class BaseService<T extends Model> {
   protected constructor(protected model: ModelCtor<T>) {}
 
-  public async all(): Promise<Array<T>> {
-    return this.model.findAll()
+  public async all(options: { offset?: number; limit?: number } = {}): Promise<Array<T>> {
+    return this.model.findAll({
+      offset: options.offset,
+      limit: options.limit,
+    })
   }
 
-  public async find(id: T['id']): Promise<T | null> {
-    return this.model.findByPk(id)
+  public async find(
+    id: T['id'],
+    options: { offset?: number; limit?: number } = {}
+  ): Promise<T | null> {
+    return this.model.findByPk(id, {
+      offset: options.offset,
+      limit: options.limit,
+    })
   }
 
-  public async findOrFail(id: T['id']): Promise<T> {
-    const model = await this.find(id)
+  public async findOneForUpdate(id: T['id']): Promise<T | null> {
+    const result = await this.model.findOne(id)
+    console.log('findOneForUpdate result ', result.dataValues)
+    return result
+  }
+
+  public async findOrFail(
+    id: T['id'],
+    options: { offset?: number; limit?: number } = {}
+  ): Promise<T> {
+    const model = await this.find(id, {
+      offset: options.offset,
+      limit: options.limit,
+    })
     if (!model) {
       throw new NotFound()
     }

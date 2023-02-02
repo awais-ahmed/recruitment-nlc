@@ -6,7 +6,10 @@ import EmployeeService from '@app/Services/EmployeeService'
 @ControllerDecorator
 class EmployeeController {
   public async index(request: Request, response: Response) {
-    const employees = await EmployeeService.all()
+    const page = Number(request.query.page)
+    const limit = Number(request.query.limit)
+    const offset = (page - 1) * limit
+    const employees = await EmployeeService.all({ offset, limit })
     response.json({ data: employees })
   }
 
@@ -36,8 +39,11 @@ class EmployeeController {
   }
 
   public async tasks(request: Request, response: Response) {
+    const page = Number(request.query.page)
+    const limit = Number(request.query.limit)
+    const offset = (page - 1) * limit
     const { id } = request.params
-    const employee = await EmployeeService.findOrFail(id)
+    const employee = await EmployeeService.findOrFail(id, { offset, limit })
     const tasks = await employee.$get('tasks')
     response.json({ data: tasks })
   }
