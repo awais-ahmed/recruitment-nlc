@@ -27,8 +27,7 @@ class TaskController {
 
   public async store(request: Request, response: Response) {
     const payload = request.body
-    const result = await RoleService.getRole(request.body.employee_id)
-    if (result.dataValues.name === 'admin') {
+    if (process.env.DB_USER === 'admin') {
       const task = await TaskService.store(payload)
       response.json({ data: task })
     } else {
@@ -38,14 +37,12 @@ class TaskController {
 
   public async show(request: Request, response: Response) {
     const { id } = request.params
-    //possono tutti veder i propri task, scomentando l'if li può veder solo il viewer ma ha più senso il controllo che ho fatto alla funzione index
-    //const result = await RoleService.getRole(request.body.employee_id)
-    //if (result.dataValues.role_id === 3) {
-    const task = await TaskService.findOrFail(id)
-    response.json({ data: task })
-    /*} else {
+    if (process.env.DB_USER === 'viewer') {
+      const task = await TaskService.findOrFail(id)
+      response.json({ data: task })
+    } else {
       response.status(401).send({ message: 'Unauthorized' })
-    }*/
+    }
   }
 
   public async update(request: Request, response: Response) {
@@ -54,6 +51,7 @@ class TaskController {
     switch (process.env.DB_USER) {
       case 'admin':
         //admin può assegnare anche task
+        //payload:{ "status": "NEW", "employee_id": 3 }
         const taskAdmin = await TaskService.update(id, payload)
         response.json({ data: taskAdmin })
         break

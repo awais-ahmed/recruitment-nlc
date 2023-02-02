@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 
 import ControllerDecorator from '@app/Decorators/ControllerDecorator'
 import EmployeeService from '@app/Services/EmployeeService'
+import TaskService from '@app/Services/TaskService'
 
 @ControllerDecorator
 class EmployeeController {
@@ -43,9 +44,14 @@ class EmployeeController {
     const limit = Number(request.query.limit)
     const offset = (page - 1) * limit
     const { id } = request.params
-    const employee = await EmployeeService.findOrFail(id, { offset, limit })
-    const tasks = await employee.$get('tasks')
-    response.json({ data: tasks })
+    const results = []
+    const tasks = await TaskService.all()
+    for (const task in tasks) {
+      if (tasks[task].dataValues.employee_id === Number(id)) {
+        results.push(tasks[task])
+      }
+    }
+    response.json({ data: results })
   }
 
   public async allEmpAndTasks(request: Request, response: Response) {

@@ -6,12 +6,6 @@ class EmployeeService extends BaseService<Employee> {
   constructor() {
     super(Employee)
   }
-
-  public async getRoleForUpdate(id: number | any): Promise<any> {
-    const result = await this.findId({ where: { id } })
-    console.log('getRoleForUpdate result ', result.dataValues)
-    return result
-  }
 }
 
 export default new EmployeeService()
