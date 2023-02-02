@@ -23,9 +23,9 @@ abstract class BaseService<T extends Model> {
     })
   }
 
-  public async findOneForUpdate(id: T['id']): Promise<T | null> {
+  public async findId(id: T['id']): Promise<T | null> {
     const result = await this.model.findOne(id)
-    console.log('findOneForUpdate result ', result.dataValues)
+    console.log('findId result ', result.dataValues)
     return result
   }
 

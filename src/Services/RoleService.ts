@@ -7,7 +7,7 @@ class RoleService extends BaseService<Role> {
   }
 
   public async getRole(id: number | any): Promise<Role | null> {
-    const result = await this.find({ where: { id } })
+    const result = await this.findId({ where: { id } })
     console.log('getRole, result', result)
     return result
   }

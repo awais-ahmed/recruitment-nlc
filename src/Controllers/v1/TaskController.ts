@@ -11,14 +11,14 @@ class TaskController {
     const page = Number(request.query.page)
     const limit = Number(request.query.limit)
     const offset = (page - 1) * limit
-    const result = await RoleService.getRole(request.body.employee_id)
+    //const result = await RoleService.getRole(request.body.employee_id)
     //posso anche semplicemente filtrare poi il risultato in modo che il viewer vede i sui risultati
-    if (result.dataValues.role_id === 1 || result.dataValues.role_id === 2) {
-      const tasks = await TaskService.all({ offset, limit })
-      response.json(tasks)
-    } else {
+    //if (result.dataValues.role_id === 1 || result.dataValues.role_id === 2) {
+    const tasks = await TaskService.all({ offset, limit })
+    response.json(tasks)
+    /*} else {
       response.status(401).send({ message: 'Unauthorized' })
-    }
+    }*/
   }
 
   public async store(request: Request, response: Response) {
@@ -34,8 +34,8 @@ class TaskController {
 
   public async show(request: Request, response: Response) {
     const { id } = request.params
-    const result = await RoleService.getRole(request.body.employee_id)
     //possono tutti veder i propri task, scomentando l'if li può veder solo il viewer ma ha più senso il controllo che ho fatto alla funzione index
+    //const result = await RoleService.getRole(request.body.employee_id)
     //if (result.dataValues.role_id === 3) {
     const task = await TaskService.findOrFail(id)
     response.json({ data: task })

@@ -8,7 +8,7 @@ class EmployeeService extends BaseService<Employee> {
   }
 
   public async getRoleForUpdate(id: number | any): Promise<any> {
-    const result = await this.findOneForUpdate({ where: { id } })
+    const result = await this.findId({ where: { id } })
     console.log('getRoleForUpdate result ', result.dataValues)
     return result
   }
